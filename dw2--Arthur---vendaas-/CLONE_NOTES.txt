@@ -1,0 +1,4 @@
+Observação: o comando 'git' não está disponível neste ambiente, então não foi possível executar 'git clone' aqui.
+Além disso, o repositório remoto 'https://github.com/Arthurbernacchi/dw2--Arthur---vendaas-' parece estar vazio (página do GitHub mostra 'This repository is empty').
+Para clonar de verdade, instale o Git localmente e rode:
+git clone "https://github.com/Arthurbernacchi/dw2--Arthur---vendaas-.git" "C:\Users\arthur_bernacchi\Av2Bm3\dw2--Arthur---vendaas-"

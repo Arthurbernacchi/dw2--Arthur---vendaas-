@@ -1,0 +1,27 @@
+Resumo: o ambiente atual não tem o comando `git` instalado, por isso não foi possível criar o commit automaticamente.
+
+O que eu fiz em código: adicionei os arquivos do projeto (package.json, src/index.js, README.md) na pasta do repositório local.
+
+Mensagem de commit sugerida (use exatamente se quiser):
+"feat: inicializa vendaas-api — endpoints produtos e confirmação de carrinho (cupom ALUNO10)"
+
+Comandos PowerShell para executar localmente (assumindo que você tenha Git instalado):
+
+cd "C:\Users\arthur_bernacchi\Av2Bm3\dw2--Arthur---vendaas-"
+# inicializa repositório (se ainda não existir)
+git init
+# adicionar todos os arquivos
+git add .
+# criar commit com a mensagem sugerida
+git commit -m "feat: inicializa vendaas-api — endpoints produtos e confirmação de carrinho (cupom ALUNO10)"
+# (opcional) configurar branch principal
+git branch -M main
+# (opcional) adicionar remoto e enviar (substitua sua URL se diferente)
+git remote add origin "https://github.com/Arthurbernacchi/dw2--Arthur---vendaas-.git"
+git push -u origin main
+
+Se você prefere não adicionar o remote ou já tem um remoto configurado, pule os comandos `git remote add` / `git push`.
+
+Se o repositório remoto já existe e possui commits, substitua `git init` por simplesmente `git add .` e `git commit...`.
+
+Se quiser, posso criar um patch (diff) que você possa aplicar com `git apply` — diga se prefere esse formato.

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loja Escolar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">Loja Escolar</div>
+    <div class="search-wrap">
+      <input id="search" aria-label="Buscar produtos" placeholder="Buscar produtos..." />
+      <select id="sort" aria-label="Ordenar">
+        <option value="">Ordenar</option>
+        <option value="preco_asc">Preço ↑</option>
+        <option value="preco_desc">Preço ↓</option>
+        <option value="nome_asc">Nome A→Z</option>
+        <option value="nome_desc">Nome Z→A</option>
+      </select>
+    </div>
+    <button id="cart-btn" class="cart-btn" aria-pressed="false" aria-label="Abrir carrinho">Carrinho <span id="cart-count" class="badge">0</span></button>
+  </header>
+
+  <main>
+    <section class="grid" id="produtos"></section>
+  </main>
+
+  <aside id="cart-drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2>Carrinho</h2>
+      <button id="close-cart" aria-label="Fechar carrinho">✕</button>
+    </div>
+    <div id="cart-items" class="cart-items" aria-live="polite"></div>
+    <div class="cart-footer">
+      <input id="cupom" placeholder="Código do cupom" aria-label="Cupom" />
+      <button id="apply-cupom">Aplicar</button>
+      <div id="subtotal">Subtotal: R$0.00</div>
+      <button id="confirm-order" class="primary">Confirmar pedido</button>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <template id="produto-card">
+    <div class="card">
+      <img class="thumb" src="" alt="" />
+      <div class="card-body">
+        <h3 class="nome"></h3>
+        <p class="descricao"></p>
+        <div class="meta">R$ <span class="preco"></span> · Estoque: <span class="estoque"></span></div>
+        <div class="actions">
+          <input type="number" class="qtd" min="1" value="1" aria-label="Quantidade" />
+          <button class="add">Adicionar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

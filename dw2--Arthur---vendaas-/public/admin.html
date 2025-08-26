@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Loja Escolar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .admin-form { max-width: 600px; margin: 20px auto; padding: 20px; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: .5rem; font-weight: 500; }
+    .form-group input, .form-group textarea, .form-group select { 
+      width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; 
+    }
+    .form-group textarea { min-height: 100px; }
+    .error { color: var(--sec); font-size: 14px; margin-top: 4px; }
+    .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .table th, .table td { padding: 8px; text-align: left; border-bottom: 1px solid #eee; }
+    .table th { background: #f9fafb; }
+    .actions { display: flex; gap: 8px; }
+    .btn-edit, .btn-delete { 
+      padding: 4px 8px; border-radius: 4px; cursor: pointer;
+      border: 1px solid #ddd; background: white;
+    }
+    .btn-delete { color: var(--sec); }
+    .nav { padding: 12px 20px; border-bottom: 1px solid #eee; }
+    .nav a { color: var(--text); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/">← Voltar para Loja</a>
+  </nav>
+
+  <main class="admin-form">
+    <h1>Gerenciar Produtos</h1>
+    
+    <form id="produto-form">
+      <input type="hidden" id="id" name="id" />
+      
+      <div class="form-group">
+        <label for="nome">Nome *</label>
+        <input type="text" id="nome" name="nome" required minlength="3" maxlength="60" />
+        <div class="error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="preco">Preço *</label>
+        <input type="number" id="preco" name="preco" required min="0.01" step="0.01" />
+        <div class="error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="estoque">Estoque *</label>
+        <input type="number" id="estoque" name="estoque" required min="0" step="1" />
+        <div class="error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="categoria">Categoria *</label>
+        <select id="categoria" name="categoria" required>
+          <option value="">Selecione...</option>
+          <option value="Papelaria">Papelaria</option>
+          <option value="Livros">Livros</option>
+          <option value="Acessórios">Acessórios</option>
+          <option value="Roupas">Roupas</option>
+          <option value="Casa">Casa</option>
+        </select>
+        <div class="error"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="sku">SKU (opcional)</label>
+        <input type="text" id="sku" name="sku" />
+      </div>
+
+      <button type="submit" class="primary">Salvar Produto</button>
+    </form>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Estoque</th>
+          <th>Categoria</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="produtos-list"></tbody>
+    </table>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const form = document.getElementById('produto-form');
+    const tbody = document.getElementById('produtos-list');
+    let editingId = null;
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function showError(field, message) {
+      const el = form.querySelector(`[name="${field}"]`).nextElementSibling;
+      el.textContent = message;
+    }
+
+    function clearErrors() {
+      form.querySelectorAll('.error').forEach(el => el.textContent = '');
+    }
+
+    function validate(data) {
+      clearErrors();
+      let valid = true;
+      if (!data.nome || data.nome.length < 3 || data.nome.length > 60) {
+        showError('nome', 'Nome deve ter entre 3 e 60 caracteres');
+        valid = false;
+      }
+      if (!data.preco || data.preco < 0.01) {
+        showError('preco', 'Preço deve ser maior que R$ 0,01');
+        valid = false;
+      }
+      if (!data.estoque || data.estoque < 0 || !Number.isInteger(Number(data.estoque))) {
+        showError('estoque', 'Estoque deve ser um número inteiro maior ou igual a 0');
+        valid = false;
+      }
+      if (!data.categoria) {
+        showError('categoria', 'Categoria é obrigatória');
+        valid = false;
+      }
+      return valid;
+    }
+
+    async function loadProdutos() {
+      try {
+        const res = await fetch('/produtos');
+        const produtos = await res.json();
+        tbody.innerHTML = '';
+        produtos.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${p.nome}</td>
+            <td>R$ ${p.preco.toFixed(2)}</td>
+            <td>${p.estoque}</td>
+            <td>${p.categoria}</td>
+            <td class="actions">
+              <button class="btn-edit" onclick="editProduto('${p.id}')">Editar</button>
+              <button class="btn-delete" onclick="deleteProduto('${p.id}')">Excluir</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        toast('Erro ao carregar produtos');
+      }
+    }
+
+    async function editProduto(id) {
+      try {
+        const res = await fetch('/produtos?search=');
+        const produtos = await res.json();
+        const produto = produtos.find(p => p.id === id);
+        if (produto) {
+          editingId = id;
+          form.id.value = id;
+          form.nome.value = produto.nome;
+          form.descricao.value = produto.descricao || '';
+          form.preco.value = produto.preco;
+          form.estoque.value = produto.estoque;
+          form.categoria.value = produto.categoria;
+          form.sku.value = produto.sku || '';
+          form.scrollIntoView({ behavior: 'smooth' });
+        }
+      } catch (err) {
+        toast('Erro ao carregar produto');
+      }
+    }
+
+    async function deleteProduto(id) {
+      if (!confirm('Confirma exclusão?')) return;
+      try {
+        const res = await fetch(`/produtos/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Erro ao excluir');
+        toast('Produto excluído');
+        loadProdutos();
+      } catch (err) {
+        toast('Erro ao excluir produto');
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        nome: form.nome.value,
+        descricao: form.descricao.value,
+        preco: Number(form.preco.value),
+        estoque: Number(form.estoque.value),
+        categoria: form.categoria.value,
+        sku: form.sku.value
+      };
+
+      if (!validate(data)) return;
+
+      try {
+        const method = editingId ? 'PUT' : 'POST';
+        const url = editingId ? `/produtos/${editingId}` : '/produtos';
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Erro ao salvar');
+        }
+
+        toast(editingId ? 'Produto atualizado' : 'Produto criado');
+        form.reset();
+        editingId = null;
+        loadProdutos();
+      } catch (err) {
+        toast(err.message);
+      }
+    });
+
+    loadProdutos();
+  </script>
+</body>
+</html>

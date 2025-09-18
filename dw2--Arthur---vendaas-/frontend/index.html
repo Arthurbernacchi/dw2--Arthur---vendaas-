@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Loja Escolar — Catálogo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Loja Escolar</h1>
+    <div class="search-cart">
+      <input id="search" aria-label="Buscar produtos" placeholder="Buscar produtos...">
+      <select id="sort" aria-label="Ordenar produtos">
+        <option value="">Ordenar</option>
+        <option value="preco_asc">Preço ↑</option>
+        <option value="preco_desc">Preço ↓</option>
+        <option value="nome_asc">Nome A-Z</option>
+        <option value="nome_desc">Nome Z-A</option>
+      </select>
+      <button id="open-cart" aria-label="Abrir carrinho">Carrinho (<span id="cart-count">0</span>)</button>
+      <button id="open-admin" aria-label="Abrir admin">Admin</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="catalog" class="grid"></section>
+  </main>
+
+  <div id="cart-drawer" class="drawer" aria-hidden="true">
+    <h2>Carrinho</h2>
+    <div id="cart-items"></div>
+    <div>
+      <input id="coupon" placeholder="Cupom" aria-label="Cupom">
+      <button id="apply-coupon">Aplicar</button>
+    </div>
+    <div id="cart-summary"></div>
+    <button id="confirm-order">Confirmar pedido</button>
+    <button id="close-cart">Fechar</button>
+  </div>
+
+  <!-- Admin modal -->
+  <div id="admin-modal" class="modal" aria-hidden="true" role="dialog" aria-label="Novo Produto">
+    <div class="modal-content">
+      <h2>Novo Produto</h2>
+      <form id="product-form">
+        <label>Nome <input id="p-nome" required minlength="3" maxlength="60"></label>
+        <label>Descrição <textarea id="p-desc"></textarea></label>
+        <label>Preço <input id="p-preco" type="number" step="0.01" min="0.01" required></label>
+        <label>Estoque <input id="p-estoque" type="number" min="0" required></label>
+        <label>Categoria <input id="p-categoria" required></label>
+        <label>SKU <input id="p-sku"></label>
+        <div class="modal-actions">
+          <button type="submit">Salvar</button>
+          <button type="button" id="close-admin">Fechar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>

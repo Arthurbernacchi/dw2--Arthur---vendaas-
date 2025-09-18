@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Relatório Técnico - Vendaas (Vendas de Produtos)
 
 ## Arquitetura
@@ -148,3 +149,64 @@ Melhorias possíveis:
 - Dark mode
 - Paginação ou scroll infinito
 - Export CSV/JSON
+=======
+# Relatório Técnico — Vendaas (Vendas de Produtos)
+
+## Objetivo
+Construir um mini-sistema web para Vendas de Produtos com frontend (HTML/CSS/JS) e backend (FastAPI + SQLite).
+
+## Estrutura do projeto
+- frontend/
+  - index.html
+  - styles.css
+  - scripts.js
+- backend/
+  - app.py
+  - models.py
+  - database.py
+  - seed.py
+  - requests.http
+- package.json (opcional para frontend tooling)
+- README.md
+- REPORT.md
+- ChatIA.md (conversas com a IA)
+
+## Como rodar
+1. Backend (recomendado em ambiente virtual):
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m backend.seed
+uvicorn backend.app:app --reload --port 8000
+```
+
+2. Frontend:
+- Abra `frontend/index.html` no navegador (ou sirva com um servidor estático).
+- O frontend consome a API em `http://localhost:8000`.
+
+## APIs implementadas
+- GET /produtos?search=&categoria=&sort=
+- POST /produtos
+- PUT /produtos/{id}
+- DELETE /produtos/{id}
+- POST /carrinho/confirmar
+
+## Regras de negócio implementadas
+- Não permitir adicionar ao carrinho se estoque = 0 (front e back)
+- Ao confirmar pedido: validar estoque, aplicar cupom ALUNO10 (10% off), reduzir estoque e criar um registro de pedido (simplificado)
+
+## Testes manuais
+- Use `backend/requests.http` ou Thunder Client para testar os endpoints.
+
+## Acessibilidade
+- Inputs com `aria-label` onde aplicável.
+- Modal gerenciado via `aria-hidden` e foco inicial.
+- Atalho Alt+N para abrir modal Novo Produto.
+
+## Observações
+- Armazenamento em memória no frontend (localStorage) e SQLite para o backend.
+- Este projeto é um esqueleto adequado para avaliação; pode ser expandido com autenticação, uploads e testes automatizados.
+

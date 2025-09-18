@@ -1,0 +1,24 @@
+### Listar produtos
+GET http://localhost:8000/produtos
+
+### Criar produto
+POST http://localhost:8000/produtos
+Content-Type: application/json
+
+{
+  "nome": "Teste",
+  "descricao": "Produto teste",
+  "preco": 10.5,
+  "estoque": 3,
+  "categoria": "Teste",
+  "sku": "TST-01"
+}
+
+### Confirmar carrinho
+POST http://localhost:8000/carrinho/confirmar
+Content-Type: application/json
+
+{
+  "itens": [ { "produtoId": "<id>", "quantidade": 1 } ],
+  "cupom": "ALUNO10"
+}
